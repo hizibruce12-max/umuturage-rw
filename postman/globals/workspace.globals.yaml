@@ -1,0 +1,5 @@
+name: Globals
+values:
+  - key: token
+    value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaXRpemVuSWQiOjIsImFwcGxpY2F0aW9uSWQiOjksImNpdGl6ZW5Db2RlIjoiSEIyMDI2ODA2NTI3NTQiLCJpYXQiOjE3OTM2MTk0ODYsImV4cCI6MTc5MzYyMzA4Nn0.qGzUxquabvi32S1tKU4fZrP3je3rNwrHlwHgwW0cnBs
+    enabled: true
