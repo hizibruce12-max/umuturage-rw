@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Register from "./Register";
 import Login from "./Login";
 import Dashboard from "./Dashboard";
+import posthogLogger from "./posthog-logger.js";
 
 const API_URL = "http://localhost:5000/api";
 
@@ -47,8 +48,14 @@ function App() {
 
         setCitizen(profile);
         setPage("dashboard");
+        posthogLogger.info("authentication session restored", {
+          authentication_flow: "stored_session",
+        });
       } catch (error) {
         console.error("Session verification failed:", error);
+        posthogLogger.warn("authentication session verification failed", {
+          failure_stage: "profile_request",
+        });
 
         if (!cancelled) {
           // Remove an invalid or expired token.
@@ -83,6 +90,9 @@ function App() {
   }
 
   function handleLogout() {
+    posthogLogger.info("authentication session ended", {
+      authentication_flow: "user_initiated_logout",
+    });
     localStorage.removeItem("umuturageToken");
 
     setCitizen(null);

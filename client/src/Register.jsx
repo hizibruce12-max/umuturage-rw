@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import posthog from "./posthog.js";
 import { locations } from "./data/locations";
 
 const API_URL = "http://localhost:5000/api";
@@ -81,6 +82,7 @@ function Register({ onGoToLogin, onGoToCreateAccount }) {
         applicationId: application.applicationId,
       });
 
+      posthog?.capture("registration_application_submitted");
       setTestCode(verification.testCode || "");
       setStage("verification");
 
@@ -111,6 +113,7 @@ function Register({ onGoToLogin, onGoToCreateAccount }) {
         applicationId,
       });
 
+      posthog?.capture("phone_verification_completed");
       setCitizenCode(result.citizenCode);
       setStage("completed");
 
