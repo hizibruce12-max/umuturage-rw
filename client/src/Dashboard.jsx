@@ -1,5 +1,6 @@
 
 import { useEffect, useState } from "react";
+import posthog from "./posthog.js";
 import Profile from "./Profile";
 import Finance from "./Finance";
 const SERVER_URL = "http://localhost:5000";
@@ -358,6 +359,7 @@ function Dashboard({ citizen, onLogout }) {
 
     if (!question.trim()) return;
 
+    posthog?.capture("assistant_message_submitted");
     setMessages((previous) => [
       ...previous,
       { sender: "user", text: question.trim() },
@@ -476,7 +478,10 @@ function Dashboard({ citizen, onLogout }) {
           {/* Logout */}
           <div className="border-t border-slate-100 p-4 dark:border-slate-700">
             <button
-              onClick={onLogout}
+              onClick={() => {
+                posthog?.capture("logout_clicked");
+                onLogout();
+              }}
               className="w-full rounded-xl px-3 py-3 text-left text-sm font-semibold text-red-500 hover:bg-red-50 dark:hover:bg-red-950"
             >
               ↪ {t.logout}

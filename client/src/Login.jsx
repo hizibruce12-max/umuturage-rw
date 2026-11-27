@@ -1,5 +1,7 @@
 
 import { useState } from "react";
+import posthog from "./posthog.js";
+import posthogLogger from "./posthog-logger.js";
 
 const API_URL = "http://localhost:5000/api";
 
@@ -57,6 +59,7 @@ function Login({ onLoginSuccess, initialMode = "login" }) {
       );
 
       setIsSuccess(true);
+      posthog?.capture("account_created");
       setPassword("");
       setConfirmPassword("");
       setMode("login");
@@ -85,6 +88,10 @@ function Login({ onLoginSuccess, initialMode = "login" }) {
 
       setMessage("Login successful!");
       setIsSuccess(true);
+      posthog?.capture("login_succeeded");
+      posthogLogger.info("authentication login completed", {
+        authentication_method: "citizen_code",
+      });
 
       if (onLoginSuccess) {
         onLoginSuccess(result.citizen);

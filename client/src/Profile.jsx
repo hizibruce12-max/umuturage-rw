@@ -1,5 +1,6 @@
 
 import { useEffect, useRef, useState } from "react";
+import posthog from "./posthog.js";
 
 const API_URL = "http://localhost:5000/api";
 const SERVER_URL = "http://localhost:5000";
@@ -179,6 +180,7 @@ function Profile({ citizen, onProfileUpdated }) {
 
       const savedPhoto = getPhotoUrl(result.profilePhotoUrl);
 
+      posthog?.capture("profile_photo_uploaded");
       setPhoto(savedPhoto);
 
       if (onProfileUpdated) {
@@ -234,6 +236,7 @@ function Profile({ citizen, onProfileUpdated }) {
 
       await loadProfile();
 
+      posthog?.capture("profile_updated");
       setEditing(false);
 
       showMessage(

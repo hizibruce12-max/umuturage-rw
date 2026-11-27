@@ -1,5 +1,6 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import posthog from "./posthog.js";
 
 const API_URL = "http://localhost:5000/api";
 
@@ -214,6 +215,9 @@ function Finance({ darkMode = false }) {
         }),
       });
 
+      posthog?.capture("financial_account_added", {
+        account_type: accountType,
+      });
       setAccountForm({
         providerId: "",
         accountName: "",
@@ -240,6 +244,9 @@ function Finance({ darkMode = false }) {
         body: JSON.stringify(incomeSourceForm),
       });
 
+      posthog?.capture("income_source_added", {
+        income_source_type: incomeSourceForm.sourceType,
+      });
       setIncomeSourceForm({
         sourceName: "",
         sourceType: "salary",
@@ -271,6 +278,11 @@ function Finance({ darkMode = false }) {
         }),
       });
 
+      posthog?.capture("income_recorded", {
+        income_source_type: incomeSources.find(
+          (source) => String(source.id) === incomeForm.incomeSourceId
+        )?.sourceType,
+      });
       setIncomeForm({
         accountId: "",
         incomeSourceId: "",
@@ -302,6 +314,9 @@ function Finance({ darkMode = false }) {
         }),
       });
 
+      posthog?.capture("expense_recorded", {
+        expense_category: expenseForm.category,
+      });
       setExpenseForm({
         accountId: "",
         amount: "",
@@ -341,6 +356,10 @@ function Finance({ darkMode = false }) {
           body: JSON.stringify(payload),
         });
 
+        posthog?.capture("budget_updated", {
+          budget_category: budgetForm.category,
+          budget_period_type: budgetForm.periodType,
+        });
         showMessage("Budget updated successfully.");
       } else {
         await request("/finance/budgets", {
@@ -348,6 +367,10 @@ function Finance({ darkMode = false }) {
           body: JSON.stringify(payload),
         });
 
+        posthog?.capture("budget_created", {
+          budget_category: budgetForm.category,
+          budget_period_type: budgetForm.periodType,
+        });
         showMessage("Budget created successfully.");
       }
 
@@ -392,6 +415,9 @@ function Finance({ darkMode = false }) {
         body: JSON.stringify({ budgetStatus: status }),
       });
 
+      posthog?.capture("budget_status_updated", {
+        budget_status: status,
+      });
       showMessage(`Budget marked as ${status}.`);
       await loadFinance();
     } catch (err) {
